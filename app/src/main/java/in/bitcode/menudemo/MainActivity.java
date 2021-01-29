@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
     public static final int MENU_PHONE_SETTINGS = 11, MENU_SYSTEM_SETTINGS = 12;
 
     private CheckBox mChkSettings;
+    private EditText mEdtInfo;
+    private TextView mTxtInfo;
+
+    private String mStr;
+
+    public static final int MENU_COPY = 50, MENU_CUT = 51, MENU_PASTE = 52, MENU_APPEND = 53;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +35,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mChkSettings = findViewById(R.id.chkSettings);
+        mEdtInfo = findViewById(R.id.edtInfo);
+        mTxtInfo = findViewById(R.id.txtInfo);
+
+        registerForContextMenu(mEdtInfo);
+        registerForContextMenu(mTxtInfo);
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+
+        mt("onCreateContextMenu");
+
+        if(view == mEdtInfo) {
+            menu.add(0, MENU_COPY, 0, "Copy");
+            menu.add(0, MENU_CUT, 0, "Cut");
+            menu.setGroupEnabled(0, mChkSettings.isChecked());
+        }
+
+        if(view.getId() == R.id.txtInfo) {
+            menu.add(1, MENU_PASTE, 0, "Paste");
+            menu.add(1, MENU_APPEND, 0, "Append");
+            menu.setGroupEnabled(1, mChkSettings.isChecked());
+        }
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_COPY:
+                mStr = mEdtInfo.getText().toString();
+                break;
+            case MENU_CUT:
+                mStr = mEdtInfo.getText().toString();
+                mEdtInfo.setText("");
+                break;
+            case MENU_PASTE:
+                mTxtInfo.setText(mStr);;
+                break;
+            case MENU_APPEND:
+                mTxtInfo.append(mStr);
+                break;
+        }
+        return true;
     }
 
     @Override

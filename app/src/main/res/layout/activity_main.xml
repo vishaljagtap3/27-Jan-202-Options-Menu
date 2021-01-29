@@ -14,4 +14,16 @@
         android:id="@+id/chkSettings"
         android:checked="true"/>
 
+    <TextView
+        android:text="Hello"
+        android:id="@+id/txtInfo"
+        android:textSize="50px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edtInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
